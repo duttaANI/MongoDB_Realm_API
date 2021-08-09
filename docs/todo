@@ -1,0 +1,5 @@
+Refactor
+✔ Relocate the driver functions and name appropriately. @done(2020-07-24 16:29)
+☐ Test if checkPass works with the replacement.
+☐ Better logging (debuglogger)
+☐ Convert all drivers into integration tests

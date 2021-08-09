@@ -1,0 +1,21 @@
+<html>
+  <body>
+    <h1>Login to Proceed</h1>
+    <form action="/check" method="POST">
+      <div>
+        Email:
+        <input type="email" name="email" />
+      </div>
+      <div>
+        Password:
+        <input type="password" name="pass" />
+      </div>
+      <input type="submit" />
+    </form>
+    <a href="/reset.html" target="_blank">Forgot Password?</a>
+    <!-- may have to change the link to /resetpass later
+			(since that's the endpoint that's gonna be hit)
+			but doesn't really make much of a difference,..
+			..since the same page is gonna be returned in both cases-->
+  </body>
+</html>

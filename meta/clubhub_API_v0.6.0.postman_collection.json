@@ -1,0 +1,1057 @@
+{
+	"info": {
+		"_postman_id": "76185bdb-816e-456d-adc7-c387f213d205",
+		"name": "clubhub_API_v0.6.0",
+		"description": "# Introduction\nAn AIO API to handle RESTful functions as clubhub\n\n# Overview\nThe API has authorized and authorizeless calls. All authorized calls must have a JWT in place created by an authorizeless call of createToken.\nThe flow of execution of calls should thus ideally go as:\n```createToken -> verifyToken(debug only) -> uploadFile / bulkUploads -> getStructure -> lastModified -> listUploads -> download -> updateLike```\n\n# Authentication\nThe API uses JWTs as basic authentication\n\n# Error Codes\nThe calls may return:\n```\n\t500 - Internal Server Error\n    300 - Unauthorized (variations include 301, and 302)\n    200 - OK\n    400 - Not Found\n```\n# Rate limit\nNo rate limit is set over request call (possible DDoS??)",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Generate JWT",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/x-www-form-urlencoded",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "name",
+							"value": "foo",
+							"type": "text"
+						},
+						{
+							"key": "email",
+							"value": "barbaz.com",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:3000/getToken",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"getToken"
+					]
+				},
+				"description": "Still requires a high-auth for generation to be authentic."
+			},
+			"response": []
+		},
+		{
+			"name": "Verify Token",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiZm9vIiwiZW1haWwiOiJiYXJAYmF6LmNvbSIsImlhdCI6MTU0NjQzNzAwOSwiYXVkIjoiTUlUIiwiaXNzIjoiUmVnZXgifQ.S0CUYMwt9FtSpk6uKnDVpN6glZu7ko8fD2F_wQP7E5E_NbIQAEyrPEEu5lhKQaAj_kdXvtp_nlWL6eIlj_OPjQ",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/x-www-form-urlencoded",
+						"type": "text"
+					}
+				],
+				"body": {},
+				"url": {
+					"raw": "http://localhost:3000/verifyToken",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"verifyToken"
+					]
+				},
+				"description": "Make sure to switch from production to development in app.js of root"
+			},
+			"response": []
+		},
+		{
+			"name": "Upload general document",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiUGx1c2giLCJlbWFpbCI6InBsdXNoQHRtYWlsLmNvbSIsImlhdCI6MTU0NTQ1ODg1NCwiYXVkIjoiTUlUIiwiaXNzIjoiUmVnZXgifQ.DOFAdLS_p-_0_TkOnt5DmrYLhxBH3SOaNM0Lrqd2DXQPZh1JMpJFlQofbcFKmRoAIdJAbfzMwQQBIJhuluOp2w",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/x-www-form-urlencoded",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "year",
+							"value": "3",
+							"description": "Number denoting year",
+							"type": "text"
+						},
+						{
+							"key": "branch",
+							"value": "Mechanical",
+							"description": "String with capitalized branch",
+							"type": "text"
+						},
+						{
+							"key": "subject",
+							"value": "MOS",
+							"description": "String with capitalized subject",
+							"type": "text"
+						},
+						{
+							"key": "notif",
+							"value": "false",
+							"description": "Only mark true if file is a notification",
+							"type": "text"
+						},
+						{
+							"key": "uploadFile",
+							"description": "Upload bar",
+							"type": "file",
+							"src": ""
+						}
+					]
+				},
+				"url": {
+					"raw": "localhost:3000/uploadFile",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"uploadFile"
+					]
+				},
+				"description": "Add parameters after viewing them through getStructure method.\nTo be handled implicitly by the app using the API"
+			},
+			"response": []
+		},
+		{
+			"name": "Upload general notification",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiUGx1c2giLCJlbWFpbCI6InBsdXNoQHRtYWlsLmNvbSIsImlhdCI6MTU0NTQ1ODg1NCwiYXVkIjoiTUlUIiwiaXNzIjoiUmVnZXgifQ.DOFAdLS_p-_0_TkOnt5DmrYLhxBH3SOaNM0Lrqd2DXQPZh1JMpJFlQofbcFKmRoAIdJAbfzMwQQBIJhuluOp2w",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/x-www-form-urlencoded",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "year",
+							"value": "2",
+							"description": "Number denoting year",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "branch",
+							"value": "Mechanical",
+							"description": "String with capitalized branch",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "subject",
+							"value": "MOS",
+							"description": "String with capitalized subject",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "notif",
+							"value": "true",
+							"description": "Only mark true if file is a notification",
+							"type": "text"
+						},
+						{
+							"key": "uploadFile",
+							"description": "Upload bar",
+							"type": "file",
+							"src": ""
+						}
+					]
+				},
+				"url": {
+					"raw": "localhost:3000/uploadFile",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"uploadFile"
+					]
+				},
+				"description": "Added {isNotif:true} for storing as notification. Later to be implemented into calender-like featurette"
+			},
+			"response": []
+		},
+		{
+			"name": "Upload argumented notification",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiUGx1c2giLCJlbWFpbCI6InBsdXNoQHRtYWlsLmNvbSIsImlhdCI6MTU0NTQ1ODg1NCwiYXVkIjoiTUlUIiwiaXNzIjoiUmVnZXgifQ.DOFAdLS_p-_0_TkOnt5DmrYLhxBH3SOaNM0Lrqd2DXQPZh1JMpJFlQofbcFKmRoAIdJAbfzMwQQBIJhuluOp2w",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/x-www-form-urlencoded",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "year",
+							"value": "2",
+							"description": "Number denoting year",
+							"type": "text"
+						},
+						{
+							"key": "branch",
+							"value": "Mechanical",
+							"description": "String with capitalized branch",
+							"type": "text"
+						},
+						{
+							"key": "subject",
+							"value": "MOS",
+							"description": "String with capitalized subject",
+							"type": "text"
+						},
+						{
+							"key": "notif",
+							"value": "true",
+							"description": "Only mark true if file is a notification",
+							"type": "text"
+						},
+						{
+							"key": "uploadFile",
+							"description": "Upload bar",
+							"type": "file",
+							"src": ""
+						}
+					]
+				},
+				"url": {
+					"raw": "localhost:3000/uploadFile",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"uploadFile"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Upload argumented notification",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiUGx1c2giLCJlbWFpbCI6InBsdXNoQHRtYWlsLmNvbSIsImlhdCI6MTU0NTQ1ODg1NCwiYXVkIjoiTUlUIiwiaXNzIjoiUmVnZXgifQ.DOFAdLS_p-_0_TkOnt5DmrYLhxBH3SOaNM0Lrqd2DXQPZh1JMpJFlQofbcFKmRoAIdJAbfzMwQQBIJhuluOp2w",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/x-www-form-urlencoded",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "year",
+							"value": "2",
+							"description": "Number denoting year",
+							"type": "text"
+						},
+						{
+							"key": "branch",
+							"value": "Mechanical",
+							"description": "String with capitalized branch",
+							"type": "text"
+						},
+						{
+							"key": "subject",
+							"value": "MOS",
+							"description": "String with capitalized subject",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "notif",
+							"value": "true",
+							"description": "Only mark true if file is a notification",
+							"type": "text"
+						},
+						{
+							"key": "uploadFile",
+							"description": "Upload bar",
+							"type": "file",
+							"src": ""
+						}
+					]
+				},
+				"url": {
+					"raw": "localhost:3000/uploadFile",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"uploadFile"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Upload argumented notification",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiUGx1c2giLCJlbWFpbCI6InBsdXNoQHRtYWlsLmNvbSIsImlhdCI6MTU0NTQ1ODg1NCwiYXVkIjoiTUlUIiwiaXNzIjoiUmVnZXgifQ.DOFAdLS_p-_0_TkOnt5DmrYLhxBH3SOaNM0Lrqd2DXQPZh1JMpJFlQofbcFKmRoAIdJAbfzMwQQBIJhuluOp2w",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/x-www-form-urlencoded",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "year",
+							"value": "2",
+							"description": "Number denoting year",
+							"type": "text"
+						},
+						{
+							"key": "branch",
+							"value": "Mechanical",
+							"description": "String with capitalized branch",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "subject",
+							"value": "MOS",
+							"description": "String with capitalized subject",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "notif",
+							"value": "true",
+							"description": "Only mark true if file is a notification",
+							"type": "text"
+						},
+						{
+							"key": "uploadFile",
+							"description": "Upload bar",
+							"type": "file",
+							"src": ""
+						}
+					]
+				},
+				"url": {
+					"raw": "localhost:3000/uploadFile",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"uploadFile"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Bulk Upload",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiUGx1c2giLCJlbWFpbCI6InBsdXNoQHRtYWlsLmNvbSIsImlhdCI6MTU0NTQ1ODg1NCwiYXVkIjoiTUlUIiwiaXNzIjoiUmVnZXgifQ.DOFAdLS_p-_0_TkOnt5DmrYLhxBH3SOaNM0Lrqd2DXQPZh1JMpJFlQofbcFKmRoAIdJAbfzMwQQBIJhuluOp2w",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/x-www-form-urlencoded",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "year",
+							"value": "3",
+							"description": "Number denoting year",
+							"type": "text"
+						},
+						{
+							"key": "branch",
+							"value": "Mechanical",
+							"description": "String with capitalized branch",
+							"type": "text"
+						},
+						{
+							"key": "subject",
+							"value": "MOS",
+							"description": "String with capitalized subject",
+							"type": "text"
+						},
+						{
+							"key": "notif",
+							"value": "false",
+							"description": "Only mark true if file is a notification",
+							"type": "text"
+						},
+						{
+							"key": "bulkUpload",
+							"description": "Upload bar",
+							"type": "file",
+							"src": ""
+						}
+					]
+				},
+				"url": {
+					"raw": "localhost:3000/bulkUpload",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"bulkUpload"
+					]
+				},
+				"description": "Bulk upload support added. Still needs extensive stress tests over server access. Usage of synchronous forEach might cause server overloads."
+			},
+			"response": []
+		},
+		{
+			"name": "Get Structure",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiUGx1c2giLCJlbWFpbCI6InBsdXNoQHRtYWlsLmNvbSIsImlhdCI6MTU0NTQ1ODg1NCwiYXVkIjoiTUlUIiwiaXNzIjoiUmVnZXgifQ.DOFAdLS_p-_0_TkOnt5DmrYLhxBH3SOaNM0Lrqd2DXQPZh1JMpJFlQofbcFKmRoAIdJAbfzMwQQBIJhuluOp2w",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/x-www-form-urlencoded"
+					}
+				],
+				"body": {},
+				"url": {
+					"raw": "localhost:3000/getStructure",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"getStructure"
+					]
+				},
+				"description": "TO BE CALLED IMPLICITLY ONLY BY THE INTERFACE AND NOT FROM USER END"
+			},
+			"response": []
+		},
+		{
+			"name": "Last modified timestamp 1",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiUGx1c2giLCJlbWFpbCI6InBsdXNoQHRtYWlsLmNvbSIsImlhdCI6MTU0NTQ1ODg1NCwiYXVkIjoiTUlUIiwiaXNzIjoiUmVnZXgifQ.DOFAdLS_p-_0_TkOnt5DmrYLhxBH3SOaNM0Lrqd2DXQPZh1JMpJFlQofbcFKmRoAIdJAbfzMwQQBIJhuluOp2w",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/x-www-form-urlencoded",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "localhost:3000/lastModified?year=3",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"lastModified"
+					],
+					"query": [
+						{
+							"key": "year",
+							"value": "3"
+						}
+					]
+				},
+				"description": "Supplies with a singular 8-digit value indicating output of Date.now()"
+			},
+			"response": []
+		},
+		{
+			"name": "Last modified timestamp 2",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiUGx1c2giLCJlbWFpbCI6InBsdXNoQHRtYWlsLmNvbSIsImlhdCI6MTU0NTQ1ODg1NCwiYXVkIjoiTUlUIiwiaXNzIjoiUmVnZXgifQ.DOFAdLS_p-_0_TkOnt5DmrYLhxBH3SOaNM0Lrqd2DXQPZh1JMpJFlQofbcFKmRoAIdJAbfzMwQQBIJhuluOp2w",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "localhost:3000/lastModified?year=3&subject=MOS",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"lastModified"
+					],
+					"query": [
+						{
+							"key": "year",
+							"value": "3"
+						},
+						{
+							"key": "subject",
+							"value": "MOS"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "List Uploads (max paging[10,10])",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiUGx1c2giLCJlbWFpbCI6InBsdXNoQHRtYWlsLmNvbSIsImlhdCI6MTU0NTQyMTUwNCwiYXVkIjoiTUlUIiwiaXNzIjoiUmVnZXgifQ.EVHSbLoWqnWLOZxfzGHoHXDQ6SGvOg7O8bN2gkmynLxm8msnLyM71s52Mh3hvJ4_qj2SNgd401vyuDeqFY-Qhw",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "localhost:3000/listUploads",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"listUploads"
+					]
+				},
+				"description": "Lists all uploads with default values. Values might be optimized later."
+			},
+			"response": []
+		},
+		{
+			"name": "List Uploads (max paging w/ condition)",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiUGx1c2giLCJlbWFpbCI6InBsdXNoQHRtYWlsLmNvbSIsImlhdCI6MTU0NTQyMTUwNCwiYXVkIjoiTUlUIiwiaXNzIjoiUmVnZXgifQ.EVHSbLoWqnWLOZxfzGHoHXDQ6SGvOg7O8bN2gkmynLxm8msnLyM71s52Mh3hvJ4_qj2SNgd401vyuDeqFY-Qhw",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "localhost:3000/listUploads?year=2",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"listUploads"
+					],
+					"query": [
+						{
+							"key": "year",
+							"value": "2"
+						}
+					]
+				},
+				"description": "Conditional listing of uploads"
+			},
+			"response": []
+		},
+		{
+			"name": "List Uploads (defined paging w/ condition)",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiUGx1c2giLCJlbWFpbCI6InBsdXNoQHRtYWlsLmNvbSIsImlhdCI6MTU0NTQyMTUwNCwiYXVkIjoiTUlUIiwiaXNzIjoiUmVnZXgifQ.EVHSbLoWqnWLOZxfzGHoHXDQ6SGvOg7O8bN2gkmynLxm8msnLyM71s52Mh3hvJ4_qj2SNgd401vyuDeqFY-Qhw",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "localhost:3000/listUploads?year=2&page_size=4",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"listUploads"
+					],
+					"query": [
+						{
+							"key": "year",
+							"value": "2"
+						},
+						{
+							"key": "page_size",
+							"value": "4"
+						}
+					]
+				},
+				"description": "can also be passed as http://localhost:3000/listUploads?year=2&page_size=4&page=1"
+			},
+			"response": []
+		},
+		{
+			"name": "List Uploads (fully defined pagination w/ query)",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiUGx1c2giLCJlbWFpbCI6InBsdXNoQHRtYWlsLmNvbSIsImlhdCI6MTU0NTQyMTUwNCwiYXVkIjoiTUlUIiwiaXNzIjoiUmVnZXgifQ.EVHSbLoWqnWLOZxfzGHoHXDQ6SGvOg7O8bN2gkmynLxm8msnLyM71s52Mh3hvJ4_qj2SNgd401vyuDeqFY-Qhw",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "localhost:3000/listUploads?year=2&page_size=4&page=3",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"listUploads"
+					],
+					"query": [
+						{
+							"key": "year",
+							"value": "2"
+						},
+						{
+							"key": "page_size",
+							"value": "4"
+						},
+						{
+							"key": "page",
+							"value": "3"
+						}
+					]
+				},
+				"description": "Complete example to refer to."
+			},
+			"response": []
+		},
+		{
+			"name": "List Uploads (fully defined pagination w/o query)",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiUGx1c2giLCJlbWFpbCI6InBsdXNoQHRtYWlsLmNvbSIsImlhdCI6MTU0NTQyMTUwNCwiYXVkIjoiTUlUIiwiaXNzIjoiUmVnZXgifQ.EVHSbLoWqnWLOZxfzGHoHXDQ6SGvOg7O8bN2gkmynLxm8msnLyM71s52Mh3hvJ4_qj2SNgd401vyuDeqFY-Qhw",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "localhost:3000/listUploads?page_size=4&page=3",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"listUploads"
+					],
+					"query": [
+						{
+							"key": "page_size",
+							"value": "4"
+						},
+						{
+							"key": "page",
+							"value": "3"
+						}
+					]
+				},
+				"description": "Pagination at work, isolated from queries"
+			},
+			"response": []
+		},
+		{
+			"name": "Like Function",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiZm9vIiwiZW1haWwiOiJiYXJAYmF6LmNvbSIsImlhdCI6MTU0NjQzNzAwOSwiYXVkIjoiTUlUIiwiaXNzIjoiUmVnZXgifQ.S0CUYMwt9FtSpk6uKnDVpN6glZu7ko8fD2F_wQP7E5E_NbIQAEyrPEEu5lhKQaAj_kdXvtp_nlWL6eIlj_OPjQ",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/x-www-form-urlencoded",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "id",
+							"value": "5c4dd72027b6216033dce383",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:3000/updateLike",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"updateLike"
+					]
+				},
+				"description": "Call with Mongo objectID gathered from listUploads"
+			},
+			"response": []
+		},
+		{
+			"name": "Dislike Function",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiZm9vIiwiZW1haWwiOiJiYXJAYmF6LmNvbSIsImlhdCI6MTU0NjQzNzAwOSwiYXVkIjoiTUlUIiwiaXNzIjoiUmVnZXgifQ.S0CUYMwt9FtSpk6uKnDVpN6glZu7ko8fD2F_wQP7E5E_NbIQAEyrPEEu5lhKQaAj_kdXvtp_nlWL6eIlj_OPjQ",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/x-www-form-urlencoded"
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "id",
+							"value": "5c4dd72027b6216033dce383",
+							"type": "text"
+						},
+						{
+							"key": "dislike",
+							"value": "true",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:3000/updateLike",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"updateLike"
+					]
+				},
+				"description": "Call with Mongo objectID gathered from listUploads"
+			},
+			"response": []
+		},
+		{
+			"name": "Download document",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiUGx1c2giLCJlbWFpbCI6InBsdXNoQHRtYWlsLmNvbSIsImlhdCI6MTU0NTQ1ODg1NCwiYXVkIjoiTUlUIiwiaXNzIjoiUmVnZXgifQ.DOFAdLS_p-_0_TkOnt5DmrYLhxBH3SOaNM0Lrqd2DXQPZh1JMpJFlQofbcFKmRoAIdJAbfzMwQQBIJhuluOp2w",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "http://localhost:3000/download?fURL=cHVibGljL2ltYWdlcy91cGxvYWRzL2NveC0xNTQ1NjEwMzM4NjEyLnBzZA==",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"download"
+					],
+					"query": [
+						{
+							"key": "fURL",
+							"value": "cHVibGljL2ltYWdlcy91cGxvYWRzL2NveC0xNTQ1NjEwMzM4NjEyLnBzZA==",
+							"description": "Only pass base64 encoded strings"
+						}
+					]
+				},
+				"description": "Must pass base64 encoded path from listUploads call"
+			},
+			"response": []
+		},
+		{
+			"name": "Search function",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiZm9vIiwiZW1haWwiOiJiYXJiYXouY29tIiwiaWF0IjoxNTQ5NDkwMjE4LCJleHAiOjE1NDk1MzM0MTgsImF1ZCI6Ik1JVCIsImlzcyI6IlJlZ2V4In0.EWeXseROI1mBvYKFwiA4nQbmbdtTcmalICIhDV4foCdWgK3zsd4_5ILhcviubxeRhu783vy6ZxB9rzXgrU_kjA",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "http://localhost:3000/search?s=ko,0-,K*",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"search"
+					],
+					"query": [
+						{
+							"key": "s",
+							"value": "ko,0-,K*",
+							"description": "pass array of search keyword values as param1,param2,param3"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"id": "b0e62df0-56ab-4d79-86f1-1f232c58d559",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"id": "65775cc8-22e6-499a-a610-ced2b89edba2",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	]
+}

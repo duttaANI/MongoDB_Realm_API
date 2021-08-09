@@ -1,0 +1,22 @@
+{
+  "app_id": "",
+  "name": "",
+  "security": {
+    "allowed_request_origins": ["<Origin URL>"]
+  },
+  "hosting": {
+    "enabled": <boolean>,
+    "custom_domain": "<Custom Domain Name>",
+    "app_default_domain": "<Default Domain Name>"
+  },
+  "custom_user_data_config": {
+    "enabled": <Boolean>
+    "mongo_service_id": "<MongoDB Service ID>",
+    "database_name": "<Database Name>",
+    "collection_name": "<Collection Name>",
+    "user_id_field": "<Field Name>"
+  }
+  "deployment_model": "<Deployment Model Type>",
+  "location": "<Deployment Cloud Region Name>",
+  "config_version": <Version Number>
+}
