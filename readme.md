@@ -1,5 +1,8 @@
 # ClubHub-api
 
+![Mongodb](https://img.shields.io/badge/MongoDB-4EA94B?style=for-the-badge&logo=mongodb&logoColor=white)&nbsp;
+![NPM](https://img.shields.io/badge/npm-CB3837?style=for-the-badge&logo=npm&logoColor=white)&nbsp;
+
 # HOW TO RUN user_info.js
 
 1. $ npm init
